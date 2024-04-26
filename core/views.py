@@ -29,16 +29,18 @@ def singup(requset):
                 user.save()
 
                 #logowanie użytkownika i przekierowanie do ustawień
-
+                user_login = auth.authenticate(username=username, password=password)
+                auth.login(requset, user_login)
                 user_model = User.objects.get(username=username)
                 new_profile = Profile.objects.create(user=user_model, u_id=user_model.id)
                 new_profile.save()
-                return redirect('signup')
+                return redirect('settings')
         else:
             messages.info(requset, 'Hasła różnią się od siebie')
             return redirect('signup')
     else:
         return render(requset, 'signup.html')
+
 
 def signin(request):
     if request.method == 'POST':
@@ -56,7 +58,31 @@ def signin(request):
     else:
         return render(request, 'signin.html')
 
+
 @login_required(login_url='signin')
 def logout(request):
     auth.logout(request)
     return redirect('signin')
+
+
+@login_required(login_url='signin')
+def settings(request):
+    user_profile = Profile.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        if request.FILES.get('image') == None:
+            user_profile.profile_img = user_profile.profile_img
+            user_profile.bio = request.POST['bio']
+            user_profile.fav_couisine = request.POST['fav_couisine']
+
+            user_profile.save()
+        else:
+            user_profile.profile_img = request.FILES.get('image')
+            user_profile.bio = request.POST['bio']
+            user_profile.fav_couisine = request.POST['fav_couisine']
+
+            user_profile.save()
+        return redirect('settings')
+    return render(request, 'settings.html', {'user_profile': user_profile})
+
+
