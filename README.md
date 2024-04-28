@@ -31,3 +31,20 @@ CookShare to nie tylko aplikacja, ale również społeczność ludzi, którzy ko
 
 backend - python flask (ew. django)
 front - react (ew. vue.js)
+
+
+# instrukcja uruchomienia:
+
+ ### Zainstaluj lokalne środowisko w pobranym repo 
+ python -m venv env
+
+ ### Zainstaluj niezbędne biblioteki
+ pip instal -r requirements.txt
+
+ ### Wykonaj migracje
+ python manage.py makemigrations
+ python manage.py migrate
+
+ ### Uruchom serwer
+ python manage.py runserver
+
